@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Сөздің логикасы</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f3f4f6;
+      color: #333;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    h1 {
+      color: #4CAF50;
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+    }
+    #question {
+      font-size: 1.8rem;
+      margin-bottom: 20px;
+      font-weight: bold;
+    }
+    button {
+      margin: 10px;
+      padding: 15px 30px;
+      font-size: 1.2rem;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      background-color: #008CBA;
+      color: white;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #005f73;
+    }
+    #score {
+      margin-top: 20px;
+      font-size: 1.4rem;
+      color: #ff6347;
+    }
+    #gameOver {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>Сөздің логикасы</h1>
+  <div id="game">
+    <div id="question"></div>
+    <div id="answers"></div>
+    <p id="score">Ұпай: 0</p>
+  </div>
+  <div id="gameOver">
+    <h2>Ойын аяқталды!</h2>
+    <p id="finalScore"></p>
+    <button onclick="restartGame()">Қайта бастау</button>
+  </div>
+
+  <script>
+    const questions = [
+      {
+        question: "5 + 3 неше болады?",
+        answer: "8",
+        options: ["6", "8", "10", "12"]
+      },
+      {
+        question: "Келесі санды табыңыз: 2, 4, 6, ___?",
+        answer: "8",
+        options: ["7", "8", "9", "10"]
+      },
+      {
+        question: "Қай сан 4-ке бөлінеді және жұп сан?",
+        answer: "6",
+        options: ["5", "6", "7", "9"]
+      },
+      {
+        question: "Келесі сөзді аяқтаңыз: Шұғыланы ___",
+        answer: "Келтіру",
+        options: ["Қызмет", "Қабылдау", "Келтіру", "Жоспарлау"]
+      },
+      {
+        question: "Алтыбұрыштың қанша бұрышы бар?",
+        answer: "6",
+        options: ["4", "6", "8", "10"]
+      }
+    ];
+
+    let score = 0;
+    let currentQuestionIndex = 0;
+    const questionElement = document.getElementById("question");
+    const answersElement = document.getElementById("answers");
+    const scoreElement = document.getElementById("score");
+    const gameElement = document.getElementById("game");
+    const gameOverElement = document.getElementById("gameOver");
+    const finalScoreElement = document.getElementById("finalScore");
+
+    function startGame() {
+      score = 0;
+      currentQuestionIndex = 0;
+      gameOverElement.style.display = "none";
+      gameElement.style.display = "block";
+      generateQuestion();
+    }
+
+    function generateQuestion() {
+      if (currentQuestionIndex >= questions.length) {
+        endGame();
+        return;
+      }
+
+      const currentQuestion = questions[currentQuestionIndex];
+      questionElement.textContent = currentQuestion.question;
+
+      answersElement.innerHTML = "";
+      const shuffledOptions = shuffleArray(currentQuestion.options);
+
+      shuffledOptions.forEach((option) => {
+        const button = document.createElement("button");
+        button.textContent = option;
+        button.onclick = () => checkAnswer(option, currentQuestion.answer);
+        answersElement.appendChild(button);
+      });
+    }
+
+    function checkAnswer(answer, correctAnswer) {
+      if (answer === correctAnswer) {
+        score++;
+        scoreElement.textContent = `Ұпай: ${score}`;
+        currentQuestionIndex++;
+        generateQuestion();
+      } else {
+        endGame();
+      }
+    }
+
+    function shuffleArray(array) {
+      return array.sort(() => Math.random() - 0.5);
+    }
+
+    function endGame() {
+      gameElement.style.display = "none";
+      gameOverElement.style.display = "block";
+      finalScoreElement.textContent = `Сіздің ұпайыңыз: ${score}`;
+    }
+
+    function restartGame() {
+      startGame();
+    }
+
+    startGame();
+  </script>
+</body>
+</html>
